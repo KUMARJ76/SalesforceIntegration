@@ -24,6 +24,32 @@ global with sharing class Demo2AccountDetails {
      global List<case> caseList;
    }
 
+
+//usecase:4 "Third Party will make a request to the Apex Rest and with the account id in the URL, You need to delete the account record and return the success/error message
+
+@httpDelete
+global static String deleteAccountInformation(){
+    String accId=RestContext.request.requestURI.subStringAfterLast('/');
+    Account acc=[Select Id,Name from Account where Id=:accId];
+    try{
+     delete acc;
+     return 'Account deleted successfully !!';
+    }
+        catch(Exception error){
+           return error.getMessage();
+        }
+   
+}
+
+
+
+
+
+
+
+
+
+
   //Usecase:3------ Create a Webservice which will accept information about Account and contacts and insert Account with related contacts in salesforce and returned the information about both Account and contacts
    @httpPost
 
@@ -35,6 +61,24 @@ global static AccountInformation  createAccountWithRelatedRecords (AccountInform
     insert conRecord;
     return information;
 }
+
+// ? Body that has been send for Usecase 3
+// {
+//     "information":{
+//         "accountRecord":{
+//            "Name":"Ankit Jain",
+//            "Industry":"Energy",
+//            "SLA__C":"Gold"
+//         },
+//         "contactRecord":{
+//            "FirstName":"Kushal",
+//            "LastName":" Ghanini"
+//         }
+//     }
+// }
+
+
+
 
 
 
