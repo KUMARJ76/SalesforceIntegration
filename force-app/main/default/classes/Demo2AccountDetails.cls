@@ -26,29 +26,46 @@ global with sharing class Demo2AccountDetails {
 
   //Usecase:3------ Create a Webservice which will accept information about Account and contacts and insert Account with related contacts in salesforce and returned the information about both Account and contacts
    @httpPost
-   global static AccountContactWrapper createAccountRelatedContacts(String accountName,String accountIndustry,String accountRating,String contactLastName,String contactEmail){
-    Account acc=new Account(
-        Name=accountName,
-        Industry=accountIndustry,
-        Rating=accountRating
-    );
-     insert acc;
-    Contact con=new Contact(
-        LastName=contactLastName,
-        Email=contactEmail,
-        AccountId=acc.Id
-    );
-    insert con;
-    AccountContactWrapper wrapper=new AccountContactWrapper();
-    wrapper.accountRecord=acc;
-    wrapper.contactRecord=con;
+
+global static AccountInformation  createAccountWithRelatedRecords (AccountInformation information){
+    Account accRecord=information.accountRecord;
+    Contact conRecord=information.contactRecord;
+    insert accRecord;
+    conRecord.AccountId=accRecord.Id;
+    insert conRecord;
+    return information;
+}
+
+
+
+//    global static AccountContactWrapper createAccountRelatedContacts(String accountName,String accountIndustry,String accountRating,String contactLastName,String contactEmail){
+//     Account acc=new Account(
+//         Name=accountName,
+//         Industry=accountIndustry,
+//         Rating=accountRating
+//     );
+//      insert acc;
+//     Contact con=new Contact(
+//         LastName=contactLastName,
+//         Email=contactEmail,
+//         AccountId=acc.Id
+//     );
+//     insert con;
+//     AccountContactWrapper wrapper=new AccountContactWrapper();
+//     wrapper.accountRecord=acc;
+//     wrapper.contactRecord=con;
   
 
-    // return acc;
-    return wrapper;
+//     // return acc;
+//     return wrapper;
     
 
-   }
+//    }
+
+
+
+
+
 
    //wrapper class AcountContacts
 
@@ -67,4 +84,13 @@ global with sharing class Demo2AccountDetails {
     //     Account acc=[SELECT Id,Rating,Name,Industry FROM Account WHERE Id=:accId];
     //     return acc;
     // }
+
+ global  class AccountInformation{
+   global Account accountRecord{get;set;}
+   global Contact contactRecord{get;set;}
+
+
+ }
+
+
 }
