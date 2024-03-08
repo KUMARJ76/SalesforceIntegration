@@ -41,6 +41,34 @@ global static String deleteAccountInformation(){
    
 }
 
+// usecase:5 "Update the account record based on the recordId and the information provided by the third party
+
+
+@httpPatch
+global static String updateAccount(String accRating,String accIndustry,String accDesc){
+    String accId=RestContext.request.requestURI.subStringAfterLast('/');
+    Account acc=[Select Id,Name,Industry,Rating,Description from Account where Id =:accId];
+    if(acc!=null){
+        Account accRec=new Account(
+            Id=acc.Id,
+            Rating=accRating,
+            Industry=accIndustry,
+            Description=accDesc
+        );
+        try{
+            update accRec;
+            return 'Record updated successfully !!';
+        }
+        catch(Exception e){
+            return e.getMessage();
+        }
+        
+    }else{
+        return 'Record not found';
+    }
+}
+
+
 
 
 
@@ -52,7 +80,6 @@ global static String deleteAccountInformation(){
 
   //Usecase:3------ Create a Webservice which will accept information about Account and contacts and insert Account with related contacts in salesforce and returned the information about both Account and contacts
    @httpPost
-
 global static AccountInformation  createAccountWithRelatedRecords (AccountInformation information){
     Account accRecord=information.accountRecord;
     Contact conRecord=information.contactRecord;
@@ -76,6 +103,8 @@ global static AccountInformation  createAccountWithRelatedRecords (AccountInform
 //         }
 //     }
 // }
+
+
 
 
 
